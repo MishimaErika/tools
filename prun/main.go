@@ -76,13 +76,6 @@ func main() {
 		return
 	}
 
-	if len(ips) != 0 {
-		for _, v := range ips {
-			task.IP = v
-			b1.AddTask("n1", task)
-		}
-	}
-
 	if *command != "" {
 
 		task.Command = []string{*command}
@@ -90,6 +83,13 @@ func main() {
 	} else {
 		fmt.Println("执行命令不能为空")
 		return
+	}
+
+	if len(ips) != 0 {
+		for _, v := range ips {
+			task.IP = v
+			b1.AddTask("n1", task)
+		}
 	}
 
 	if *filename != "" {
