@@ -32,6 +32,9 @@ type machineDetail struct {
 
 	// Raid 信息
 	raids []raidinfo
+
+	// 电源模块 信息
+	power string
 }
 
 type diskinfo struct {
@@ -153,4 +156,5 @@ const (
 	raidInfo      = `omreport storage vdisk controller=0   | grep -E "Layout|^Size"`
 	diskInfo      = `omreport storage pdisk controller=0  | grep -E "Product ID|Capacity|Media"`
 	mems          = `omreport chassis memory  |grep -E "Connector Name|Type|Size"`
+	pwrsupplies   = `omreport chassis pwrsupplies |grep "Maximum Output Wattage" | awk -F: '{print $2}'`
 )

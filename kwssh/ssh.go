@@ -23,7 +23,6 @@ type commandResult struct {
 	res  []struct {
 		cmd  string
 		data []byte
-		err  error
 	}
 }
 
@@ -86,7 +85,6 @@ func (s *SSH) RunCommands(cmds []string) (commandResult, error) {
 	r.res = make([]struct {
 		cmd  string
 		data []byte
-		err  error
 	}, 0)
 
 	for _, cmd := range cmds {
@@ -97,17 +95,14 @@ func (s *SSH) RunCommands(cmds []string) (commandResult, error) {
 		}
 		defer session.Close()
 
-		output, err := session.CombinedOutput(cmd)
+		output, _ := session.Output(cmd)
 
-		// fmt.Println(string(output))
 		r.res = append(r.res, struct {
 			cmd  string
 			data []byte
-			err  error
 		}{
 			cmd:  cmd,
 			data: output,
-			err:  err,
 		})
 
 	}

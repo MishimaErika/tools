@@ -139,6 +139,7 @@ func (p *PlayBook) FetchInfo() {
 			diskInfo,
 			raidInfo,
 			mems,
+			pwrsupplies,
 		}
 	}
 
@@ -152,11 +153,18 @@ func (p *PlayBook) FetchInfo() {
 			if k == 0 {
 				// 处理机器型号
 				detail.productName = strings.Trim(strings.TrimLeft(string(v.data), " "), "\n")
+
+				if len(detail.productName) == 0 {
+					detail.productName = "无权限查看"
+				}
 			}
 
 			if k == 1 {
 				// 处理机器SN
 				detail.sn = strings.Trim(strings.TrimLeft(string(v.data), " "), "\n")
+				if len(detail.sn) == 0 {
+					detail.sn = "无权限查看"
+				}
 			}
 
 			if k == 2 {
@@ -191,34 +199,22 @@ func (p *PlayBook) FetchInfo() {
 
 			if k == 7 {
 				// 磁盘信息
-
-				if v.err != nil {
-					// fmt.Printf("没有omreport命令, err=%#v", v.err.Error())
-					break
-				}
 				detail.hardDisks = parseDiskInfo(string(v.data))
 			}
 
 			if k == 8 {
 				// raid信息
-
-				if v.err != nil {
-					// fmt.Printf("没有omreport命令, err=%#v", v.err.Error())
-					break
-				}
-
 				detail.raids = parseRaidInfo(string(v.data))
 			}
 
 			if k == 9 {
 				// 内存位置信息
-
-				if v.err != nil {
-					// fmt.Printf("没有omreport命令, err=%#v", v.err.Error())
-					break
-				}
-
 				detail.mems = parseMemInfo(string(v.data))
+			}
+
+			if k == 10 {
+				// 电源信息
+				detail.power = strings.Trim(strings.TrimLeft(string(v.data), " "), "\n")
 			}
 		}
 
@@ -229,6 +225,10 @@ func (p *PlayBook) FetchInfo() {
 		fmt.Printf("%-9s:\t%s\n%-7s:\t[%s]\n%-6s:\t[%s]\n%-5s:\t[%s]\n%-5s:\t[%s]\n%-9s:\t[%s]\n%-7s:\t[%s MB]\n",
 			"IP", v.ip, "型号", v.productName, "序列号", v.sn, "操作系统", v.osName, "内核版本", v.kernelVersion, "CPU", v.cpu.fullName,
 			"内存", v.memTotal)
+
+		if len(v.power) != 0 {
+			fmt.Printf("%-5s:\t[%s]\n", "电源模块", v.power)
+		}
 
 		if len(v.mems) != 0 {
 			fmt.Println("内存位置信息 :")
