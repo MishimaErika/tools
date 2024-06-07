@@ -112,10 +112,12 @@ func main() {
 
 	}
 
-	if *command == "fetch" {
+	switch *command {
+	case "fetch":
 		b1.FetchInfo()
-	} else {
+	case "fetchToDB":
+		b1.FetchInfoToDB()
+	default:
 		b1.Run()
 	}
-
 }
