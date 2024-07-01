@@ -95,7 +95,7 @@ func (s *SSH) RunCommands(cmds []string) (commandResult, error) {
 		}
 		defer session.Close()
 
-		output, _ := session.Output(cmd)
+		output, _ := session.CombinedOutput(cmd)
 
 		r.res = append(r.res, struct {
 			cmd  string
